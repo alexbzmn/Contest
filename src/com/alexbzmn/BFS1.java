@@ -6,16 +6,15 @@ import java.util.Scanner;
 
 
 public class BFS1 {
+    public static void main(String[] args) {
+        bfs();
+    }
 
     private static class Node {
         Node left;
         Node right;
         int idx;
         int val = -1;
-    }
-
-    public static void main(String[] args) {
-        bfs();
     }
 
     private static void bfs() {
@@ -54,12 +53,12 @@ public class BFS1 {
             int rootIdx = in.nextInt();
             Node rootNode = graph[rootIdx - 1];
 
-            printPaths(rootNode, n);
+            printPaths(rootNode, graph, n);
         }
 
     }
 
-    private static void printPaths(Node root, int nNodes) {
+    private static void printPaths(Node root, Node[] graph, int nNodes) {
         int[] costs = new int[nNodes];
         for (int i = 0; i < costs.length; i++) {
             costs[i] = -1;
@@ -70,32 +69,57 @@ public class BFS1 {
         LinkedList<Node> queue = new LinkedList<>();
         queue.add(root);
 
-        countPath(queue, costs);
+        countPath(queue, graph, costs);
 
-        System.out.println(Arrays.toString(costs));
+        String res = Arrays.stream(costs)
+                .filter(value -> value != 0)
+                .mapToObj(String::valueOf)
+                .reduce("", (s, s2) -> s + " " + s2)
+                .replaceFirst(" ", "");
+
+        System.out.println(res);
     }
 
-    private static void countPath(LinkedList<Node> queue, int[] costs) {
-        Node next = queue.poll();
+    private static void countPath(LinkedList<Node> queue, Node[] graph, int[] costs) {
 
-        if (next == null) {
-            return;
+        while (!queue.isEmpty()) {
+            Node next = queue.poll();
+
+            if (next == null) {
+                return;
+            }
+
+            costs[next.idx - 1] = next.val;
+
+            Node leftChild = next.left;
+            if (leftChild != null) {
+                if (leftChild.val == -1) {
+                    leftChild.val = next.val + 6;
+                    queue.add(leftChild);
+                }
+            }
+
+            Node rightChild = next.right;
+            if (rightChild != null) {
+                if (rightChild.val == -1) {
+                    rightChild.val = next.val + 6;
+                    queue.add(rightChild);
+                }
+            }
+
+            //todo optimize
+            Arrays.stream(graph).forEach(node -> {
+                if (node.left != null && node.left.idx == next.idx && node.val == -1) {
+                    node.val = next.val + 6;
+                    queue.add(node);
+                }
+
+                if (node.right != null && node.right.idx == next.idx && node.val == -1) {
+                    node.val = next.val + 6;
+                    queue.add(node);
+                }
+            });
         }
 
-        costs[next.idx - 1] = next.val;
-
-        Node leftChild = next.left;
-        if (leftChild != null) {
-            leftChild.val = next.val + 6;
-            queue.add(leftChild);
-        }
-
-        Node rightChild = next.left;
-        if (rightChild != null) {
-            rightChild.val = next.val + 6;
-            queue.add(rightChild);
-        }
-
-        countPath(queue, costs);
     }
 }
