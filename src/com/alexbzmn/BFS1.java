@@ -1,5 +1,7 @@
 package com.alexbzmn;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 
@@ -9,7 +11,7 @@ public class BFS1 {
         Node left;
         Node right;
         int idx;
-        int val = Integer.MAX_VALUE;
+        int val = -1;
     }
 
     public static void main(String[] args) {
@@ -58,7 +60,6 @@ public class BFS1 {
     }
 
     private static void printPaths(Node root, int nNodes) {
-        System.out.println(nNodes);
         int[] costs = new int[nNodes];
         for (int i = 0; i < costs.length; i++) {
             costs[i] = -1;
@@ -66,30 +67,35 @@ public class BFS1 {
         costs[root.idx - 1] = 0;
         root.val = 0;
 
-        countPath(root, costs);
+        LinkedList<Node> queue = new LinkedList<>();
+        queue.add(root);
+
+        countPath(queue, costs);
+
+        System.out.println(Arrays.toString(costs));
     }
 
-    private static void countPath(Node root, int[] costs) {
-        if (costs[root.idx - 1] == -1) {
-            costs[root.idx - 1] = root.val;
+    private static void countPath(LinkedList<Node> queue, int[] costs) {
+        Node next = queue.poll();
+
+        if (next == null) {
+            return;
         }
 
-        if (root.left != null) {
-            int leftVal = root.left.val;
+        costs[next.idx - 1] = next.val;
 
-            if (leftVal > root.val + 6) {
-                root.left.val = root.val + 6;
-                countPath(root.left, costs);
-            }
-
-        } else if (root.right != null) {
-            int rightVal = root.right.val;
-
-            if (rightVal > root.val + 6) {
-                root.right.val = root.val + 6;
-                countPath(root.right, costs);
-            }
+        Node leftChild = next.left;
+        if (leftChild != null) {
+            leftChild.val = next.val + 6;
+            queue.add(leftChild);
         }
 
+        Node rightChild = next.left;
+        if (rightChild != null) {
+            rightChild.val = next.val + 6;
+            queue.add(rightChild);
+        }
+
+        countPath(queue, costs);
     }
 }
