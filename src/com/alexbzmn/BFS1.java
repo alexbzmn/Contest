@@ -1,6 +1,8 @@
 package com.alexbzmn;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public class BFS1 {
@@ -8,64 +10,81 @@ public class BFS1 {
         bfs();
     }
 
-    private static class Node {
-        Node left;
-        Node right;
-        int idx;
-        Integer val = Integer.MAX_VALUE;
-    }
-
     private static void bfs() {
         Scanner in = new Scanner(System.in);
         int q = in.nextInt();
-
-        int g = 0;
 
         for (int i = 0; i < q; i++) {
             int n = in.nextInt();
             int m = in.nextInt();
 
-            Node[] graph = new Node[n];
+            List<List<Integer>> graph = new ArrayList<>();
+            int[] costs = new int[n];
 
             for (int k = 0; k < n; k++) {
-                Node node = new Node();
-                node.idx = k + 1;
-
-                graph[k] = node;
+                graph.add(new ArrayList<>());
+                costs[k] = Integer.MAX_VALUE;
             }
 
             for (int k = 0; k < m; k++) {
-                int from = in.nextInt();
-                int to = in.nextInt();
+                int from = in.nextInt() - 1;
+                int to = in.nextInt() - 1;
 
-                Node fromNode = graph[from - 1];
-                Node toNode = graph[to - 1];
-
-                if (fromNode.left == null) {
-                    fromNode.left = toNode;
-                } else {
-                    fromNode.right = toNode;
-                }
+                graph.get(from).add(to);
             }
 
             int rootIdx = in.nextInt();
-            Node rootNode = graph[rootIdx - 1];
 
-            printPaths(rootNode, graph, n);
+            costs[rootIdx - 1] = 0;
+
+            countPath(graph, costs);
+            printResult(costs);
         }
 
     }
 
-    private static void printPaths(Node root, Node[] graph, int nNodes) {
-        int[] costs = new int[nNodes];
-        for (int i = 0; i < costs.length; i++) {
-            costs[i] = Integer.MAX_VALUE;
+
+    private static void countPath(List<List<Integer>> graph, int[] costs) {
+        List<Integer> nodeSet = new ArrayList<>();
+        nodeSet.addAll(IntStream.range(0, costs.length).boxed().collect(Collectors.toList()));
+
+        while (!nodeSet.isEmpty()) {
+            Integer next = null;
+            int minCost = Integer.MAX_VALUE;
+
+            for (int i = 0; i < costs.length; i++) {
+                if (costs[i] < minCost && nodeSet.contains(i)) {
+                    minCost = costs[i];
+                    next = i;
+                }
+            }
+
+            if (next == null) {
+                break;
+            }
+
+            nodeSet.remove(next);
+
+            List<Integer> neighbours = graph.get(next);
+            for (int i = 0; i < neighbours.size(); i++) {
+                int neighbour = neighbours.get(i);
+                if (costs[neighbour] > minCost + 6) {
+                    costs[neighbour] = minCost + 6;
+                }
+            }
+
+            for (int i = 0; i < graph.size(); i++) {
+                if (graph.get(i).contains(next)) {
+                    if (costs[i] > minCost + 6) {
+                        costs[i] = minCost + 6;
+                    }
+                }
+            }
         }
 
-        root.val = 0;
+    }
 
-        countPath(graph, costs);
-
+    private static void printResult(int[] costs) {
         for (int i = 0; i < costs.length; i++) {
             if (costs[i] == Integer.MAX_VALUE || costs[i] < -1) {
                 costs[i] = -1;
@@ -79,42 +98,5 @@ public class BFS1 {
                 .replaceFirst(" ", "");
 
         System.out.println(res);
-    }
-
-    private static void countPath(Node[] graph, int[] costs) {
-        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.val));
-        priorityQueue.addAll(Arrays.asList(graph));
-
-        while (!priorityQueue.isEmpty()) {
-            Node n = priorityQueue.poll();
-            priorityQueue.add(n);
-
-            Node next = priorityQueue.poll();
-
-            costs[next.idx - 1] = next.val;
-
-            int nextDist = next.val + 6;
-            if (next.right != null && next.right.val > nextDist) {
-                next.right.val = nextDist;
-            }
-
-            if (next.left != null && next.left.val > nextDist) {
-                next.left.val = nextDist;
-            }
-
-            for (Node node : priorityQueue) {
-                if (node.idx != next.idx) {
-                    if (node.left != null && node.left.idx == next.idx && node.val > nextDist) {
-                        node.val = nextDist;
-                    }
-
-                    if (node.right != null && node.right.idx == next.idx && node.val > nextDist) {
-                        node.val = nextDist;
-                    }
-                }
-            }
-
-        }
-
     }
 }
