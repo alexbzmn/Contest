@@ -66,6 +66,12 @@ public class BFS1 {
 
         countPath(graph, costs);
 
+        for (int i = 0; i < costs.length; i++) {
+            if (costs[i] == Integer.MAX_VALUE || costs[i] < -1) {
+                costs[i] = -1;
+            }
+        }
+
         String res = Arrays.stream(costs)
                 .filter(value -> value != 0)
                 .mapToObj(String::valueOf)
@@ -76,10 +82,13 @@ public class BFS1 {
     }
 
     private static void countPath(Node[] graph, int[] costs) {
-        Queue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.val));
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.val));
         priorityQueue.addAll(Arrays.asList(graph));
 
         while (!priorityQueue.isEmpty()) {
+            Node n = priorityQueue.poll();
+            priorityQueue.add(n);
+
             Node next = priorityQueue.poll();
 
             costs[next.idx - 1] = next.val;
