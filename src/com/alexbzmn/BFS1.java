@@ -1,8 +1,6 @@
 package com.alexbzmn;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class BFS1 {
@@ -14,7 +12,7 @@ public class BFS1 {
         Node left;
         Node right;
         int idx;
-        int val = -1;
+        Integer val = Integer.MAX_VALUE;
     }
 
     private static void bfs() {
@@ -61,15 +59,12 @@ public class BFS1 {
     private static void printPaths(Node root, Node[] graph, int nNodes) {
         int[] costs = new int[nNodes];
         for (int i = 0; i < costs.length; i++) {
-            costs[i] = -1;
+            costs[i] = Integer.MAX_VALUE;
         }
-        costs[root.idx - 1] = 0;
+
         root.val = 0;
 
-        LinkedList<Node> queue = new LinkedList<>();
-        queue.add(root);
-
-        countPath(queue, graph, costs);
+        countPath(graph, costs);
 
         String res = Arrays.stream(costs)
                 .filter(value -> value != 0)
@@ -80,45 +75,36 @@ public class BFS1 {
         System.out.println(res);
     }
 
-    private static void countPath(LinkedList<Node> queue, Node[] graph, int[] costs) {
+    private static void countPath(Node[] graph, int[] costs) {
+        Queue<Node> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.val));
+        priorityQueue.addAll(Arrays.asList(graph));
 
-        while (!queue.isEmpty()) {
-            Node next = queue.poll();
-
-            if (next == null) {
-                return;
-            }
+        while (!priorityQueue.isEmpty()) {
+            Node next = priorityQueue.poll();
 
             costs[next.idx - 1] = next.val;
 
-            Node leftChild = next.left;
-            if (leftChild != null) {
-                if (leftChild.val == -1) {
-                    leftChild.val = next.val + 6;
-                    queue.add(leftChild);
+            int nextDist = next.val + 6;
+            if (next.right != null && next.right.val > nextDist) {
+                next.right.val = nextDist;
+            }
+
+            if (next.left != null && next.left.val > nextDist) {
+                next.left.val = nextDist;
+            }
+
+            for (Node node : priorityQueue) {
+                if (node.idx != next.idx) {
+                    if (node.left != null && node.left.idx == next.idx && node.val > nextDist) {
+                        node.val = nextDist;
+                    }
+
+                    if (node.right != null && node.right.idx == next.idx && node.val > nextDist) {
+                        node.val = nextDist;
+                    }
                 }
             }
 
-            Node rightChild = next.right;
-            if (rightChild != null) {
-                if (rightChild.val == -1) {
-                    rightChild.val = next.val + 6;
-                    queue.add(rightChild);
-                }
-            }
-
-            //todo optimize
-            Arrays.stream(graph).forEach(node -> {
-                if (node.left != null && node.left.idx == next.idx && node.val == -1) {
-                    node.val = next.val + 6;
-                    queue.add(node);
-                }
-
-                if (node.right != null && node.right.idx == next.idx && node.val == -1) {
-                    node.val = next.val + 6;
-                    queue.add(node);
-                }
-            });
         }
 
     }
