@@ -17,23 +17,16 @@ public class ArrayRotation {
         }
 
         int ind = 0;
-        while(k >= 0) {
-            if (ind < 0) {
-                ind = n - 1;
-            } else {
-                ind--;
-            }
-            k--;
-        }
+        int endInd = (n - (k % n)) - 1;
 
         int[] newArr = new int[n];
-        for (int i = 0; i < n; i++) {
-            if (ind == n) {
-                ind = 0;
+
+        for (int i = n - 1; i >= 0; i--) {
+            newArr[endInd--] = a[i];
+
+            if (endInd < 0) {
+                endInd = n - 1;
             }
-
-            newArr[ind++] = a[i];
-
         }
 
         System.out.println(
