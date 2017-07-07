@@ -12,29 +12,14 @@ public class ArrayRotation {
         int n = in.nextInt();
         int k = in.nextInt();
         int a[] = new int[n];
-        for(int a_i=0; a_i < n; a_i++){
-            a[a_i] = in.nextInt();
+        for (int a_i = 0; a_i < n; a_i++) {
+            int newIndex = (a_i + (n - k)) % n;
+            a[newIndex] = in.nextInt();
         }
 
-        int ind = 0;
-        int endInd = (n - (k % n)) - 1;
-
-        int[] newArr = new int[n];
-
-        for (int i = n - 1; i >= 0; i--) {
-            newArr[endInd--] = a[i];
-
-            if (endInd < 0) {
-                endInd = n - 1;
-            }
+        for (int i : a) {
+            System.out.print(i + " ");
         }
 
-        System.out.println(
-                Arrays
-                        .stream(newArr)
-                        .mapToObj(String::valueOf)
-                        .reduce("", (s, s2) -> s + " " + s2)
-                        .replaceFirst(" ", "")
-        );
     }
 }
