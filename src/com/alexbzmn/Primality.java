@@ -11,23 +11,29 @@ public class Primality {
         int p = in.nextInt();
         for (int a0 = 0; a0 < p; a0++) {
             int n = in.nextInt();
-            boolean isNotPrime = false;
-            for (int del = n - 1; del > 1; del--) {
-                if (n % del == 0) {
-                    isNotPrime = true;
-                    break;
-                }
+            boolean isPrime = isPrime(n);
 
-            }
-
-            if (n == 1) {
-                isNotPrime = true;
-            }
-
-            System.out.println(isNotPrime ? "Not prime" : "Prime");
+            System.out.println(isPrime ? "Prime" : "Not prime");
 
         }
+    }
 
+    private static boolean isPrime(int n) {
+        if (n == 1) {
+            return false;
+        }
+
+        if (n == 2) {
+            return true;
+        }
+
+        for (int i = 2; i <= Math.sqrt(n) + 1; i++) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
