@@ -9,6 +9,7 @@ public class CycleDetection {
         Node next;
     }
 
+    // Tortoise and Hare algorithm
     boolean hasCycle(Node head) {
         if (head == null) {
             return false;
