@@ -9,22 +9,6 @@ import java.util.Scanner;
  * Created by User on 7/9/2017.
  */
 
-/**
- * TODO FAILED TESTCASE:
- *
- 11
- add s
- add ss
- add sss
- add ssss
- add sssss
- find s
- find ss
- find sss
- find ssss
- find sssss
- find ssssss
- */
 
 public class ContactTries {
     static class Node {
@@ -59,21 +43,35 @@ public class ContactTries {
 
     private static int find(String partial) {
         String[] letters = partial.split("");
-        return findCount(new LinkedList<String>(Arrays.asList(letters)), trieRoot);
+        LinkedList<String> queue = new LinkedList<>(Arrays.asList(letters));
+        Node crossNode = findCrossNode(queue, trieRoot);
+
+        if (crossNode == null) {
+            return 0;
+        }
+
+        return findCount(crossNode);
     }
 
-    private static int findCount(LinkedList<String> queue, Node trie) {
-        int result = 0;
-
+    private static Node findCrossNode(LinkedList<String> queue, Node trie) {
         if (!queue.isEmpty()) {
             Node childNode = trie.nodes.get(queue.pop());
             if (childNode != null) {
-                result += findCount(queue, childNode);
+                return findCrossNode(queue, childNode);
+            } else {
+                return null;
             }
-        } else {
-            for (Node node : trie.nodes.values()) {
-                result += findCount(queue, node);
-            }
+
+        }
+
+        return trie;
+    }
+
+    private static int findCount(Node trie) {
+        int result = 0;
+
+        for (Node node : trie.nodes.values()) {
+            result += findCount(node);
         }
 
         result += trie.isCompleteWord ? 1 : 0;
