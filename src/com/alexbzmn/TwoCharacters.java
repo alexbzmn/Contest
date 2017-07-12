@@ -8,6 +8,7 @@ import java.util.Scanner;
 /**
  * Created by User on 7/11/2017.
  */
+//TODO
 public class TwoCharacters {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
