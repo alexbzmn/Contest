@@ -6,15 +6,13 @@ import java.util.Scanner;
  * Created by User on 7/12/2017.
  */
 
-//TODO
 public class FunnyString {
-    static String funnyString(String s) {
-
+    static String funnyString(String s){
 
         char[] charArray = s.toCharArray();
 
         if (charArray.length == 2) {
-            if (Math.abs(charArray[0] - charArray[1]) == 0) {
+            if (Math.abs(charArray[0]) == Math.abs(charArray[1])) {
                 return "Funny";
             } else {
                 return "Not Funny";
@@ -25,10 +23,13 @@ public class FunnyString {
         int middleIndex = (charArray.length / 2) - 1;
         int i = middleIndex;
         int k = middleIndex + 1;
+        if (charArray.length % 2 != 0) {
+            k++;
+        }
 
         while (i < charArray.length - 1 && k > 0) {
-            int sumLeft = Math.abs(charArray[i] - charArray[i - 1]);
-            int sumRight = Math.abs(charArray[k] - charArray[k + 1]);
+            int sumLeft = Math.abs(Math.abs(charArray[i]) - Math.abs(charArray[i-1]));
+            int sumRight = Math.abs(Math.abs(charArray[k]) - Math.abs(charArray[k + 1]));
 
             if (sumLeft != sumRight) {
                 return "Not Funny";
@@ -39,6 +40,7 @@ public class FunnyString {
         }
 
         return "Funny";
+
     }
 
     public static void main(String[] args) {
