@@ -7,9 +7,7 @@ import java.util.AbstractMap.SimpleEntry;
  * Created by User on 7/14/2017.
  */
 
-//TODO currently algorithm finds MST not optimally, but it does find it using greedy shortest paths, which is not fully correct
 // TODO analyse complexity and optimise
-
 public class Prim {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -69,7 +67,7 @@ public class Prim {
 
             List<SimpleEntry<Integer, Integer>> neighbours = graph.get(cheapest.getKey());
             for (SimpleEntry<Integer, Integer> adj : neighbours) {
-                updateCost(adj, costs, cheapest.getValue(), costsMst);
+                updateCost(adj, costs, cheapest.getValue(), costsMst, mstSet);
             }
 
             for (Map.Entry<Integer, List<SimpleEntry<Integer, Integer>>> childNode : graph.entrySet()) {
@@ -77,7 +75,8 @@ public class Prim {
                     List<SimpleEntry<Integer, Integer>> adjList = childNode.getValue();
                     for (SimpleEntry<Integer, Integer> adjLink : adjList) {
                         if (adjLink.getKey().equals(cheapest.getKey())) {
-                            updateCost(new SimpleEntry<>(childNode.getKey(), adjLink.getValue()), costs, cheapest.getValue(), costsMst);
+                            updateCost(new SimpleEntry<>(childNode.getKey(), adjLink.getValue()),
+                                    costs, cheapest.getValue(), costsMst, mstSet);
                         }
                     }
                 }
@@ -88,10 +87,10 @@ public class Prim {
     }
 
     private static void updateCost(SimpleEntry<Integer, Integer> adj, Map<Integer, Integer> costs, Integer parentCost,
-                                   Map<Integer, Integer> costsMst) {
+                                   Map<Integer, Integer> costsMst, Set<Integer> mstSet) {
         Integer cost = costs.get(adj.getKey());
-        if (cost > adj.getValue() + parentCost) {
-            costs.put(adj.getKey(), adj.getValue() + parentCost);
+        if (cost > adj.getValue() && !mstSet.contains(adj.getKey())) {
+            costs.put(adj.getKey(), adj.getValue());
             costsMst.put(adj.getKey(), adj.getValue());
         }
     }
