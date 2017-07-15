@@ -6,6 +6,10 @@ import java.util.AbstractMap.SimpleEntry;
 /**
  * Created by User on 7/14/2017.
  */
+
+//TODO currently algorithm finds MST not optimally, but it does find it using greedy shortest paths, which is not fully correct
+// TODO analyse complexity and optimise
+
 public class Prim {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -29,6 +33,10 @@ public class Prim {
                 List<SimpleEntry<Integer, Integer>> adj = graph.get(nextNode);
                 adj.add(new SimpleEntry<>(nextEdge, nextCost));
             }
+
+            if (!graph.containsKey(nextEdge)) {
+                graph.put(nextEdge, new ArrayList<>());
+            }
         }
 
         int startingNode = sc.nextInt();
@@ -41,37 +49,66 @@ public class Prim {
 
         costs.put(startingNode, 0);
 
-        System.out.println(graph);
+        Map<Integer, Integer> costsMst = new HashMap<>();
+        costsMst.put(startingNode, 0);
+
+        System.out.println(findMSTSum(graph, costs, costsMst));
     }
 
-    private static SimpleEntry<Integer, Integer> getClosestEntry(Map<Integer, Integer> costs) {
+    private static int findMSTSum(Map<Integer, List<SimpleEntry<Integer, Integer>>> graph,
+                                  Map<Integer, Integer> costs, Map<Integer, Integer> costsMst) {
+
+        Set<Integer> mstSet = new HashSet<>();
+        Set<Integer> seen = new HashSet<>();
+
+        while (seen.size() < graph.size()) {
+
+            SimpleEntry<Integer, Integer> cheapest = getClosestUnseenEntry(costs, mstSet);
+            mstSet.add(cheapest.getKey());
+            seen.add(cheapest.getKey());
+
+            List<SimpleEntry<Integer, Integer>> neighbours = graph.get(cheapest.getKey());
+            for (SimpleEntry<Integer, Integer> adj : neighbours) {
+                updateCost(adj, costs, cheapest.getValue(), costsMst);
+            }
+
+            for (Map.Entry<Integer, List<SimpleEntry<Integer, Integer>>> childNode : graph.entrySet()) {
+                if (!childNode.getKey().equals(cheapest.getKey())) {
+                    List<SimpleEntry<Integer, Integer>> adjList = childNode.getValue();
+                    for (SimpleEntry<Integer, Integer> adjLink : adjList) {
+                        if (adjLink.getKey().equals(cheapest.getKey())) {
+                            updateCost(new SimpleEntry<>(childNode.getKey(), adjLink.getValue()), costs, cheapest.getValue(), costsMst);
+                        }
+                    }
+                }
+            }
+        }
+
+        return costsMst.entrySet().stream().map(Map.Entry::getValue).reduce((e1, e2) -> e1 + e2).get();
+    }
+
+    private static void updateCost(SimpleEntry<Integer, Integer> adj, Map<Integer, Integer> costs, Integer parentCost,
+                                   Map<Integer, Integer> costsMst) {
+        Integer cost = costs.get(adj.getKey());
+        if (cost > adj.getValue() + parentCost) {
+            costs.put(adj.getKey(), adj.getValue() + parentCost);
+            costsMst.put(adj.getKey(), adj.getValue());
+        }
+    }
+
+    private static SimpleEntry<Integer, Integer> getClosestUnseenEntry(Map<Integer, Integer> costs, Set<Integer> mst) {
         SimpleEntry<Integer, Integer> closest = new SimpleEntry<>(-1, Integer.MAX_VALUE);
 
         for (Map.Entry<Integer, Integer> entry : costs.entrySet()) {
+            if (mst.contains(entry.getKey())) {
+                continue;
+            }
+
             if (entry.getValue() < closest.getValue()) {
                 closest = new SimpleEntry<>(entry.getKey(), entry.getValue());
             }
         }
 
         return closest;
-    }
-
-    private static int findMSTSum(Map<Integer, List<SimpleEntry<Integer, Integer>>> graph,
-                                  Map<Integer, Integer> costs) {
-
-        Set<Integer> seen = new HashSet<>();
-        SimpleEntry<Integer, Integer> next = getClosestEntry(costs);
-        seen.add(next.getKey());
-
-        List<SimpleEntry<Integer, Integer>> neigbours = graph.get(next.getKey());
-
-        neigbours.forEach(entry -> {
-            Integer cost = costs.get(entry.getKey());
-            if (cost > entry.getValue()) {
-                costs.put(entry.getKey(), entry.getValue());
-            }
-        });
-
-        return 0;
     }
 }
