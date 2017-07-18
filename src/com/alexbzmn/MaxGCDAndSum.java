@@ -1,72 +1,72 @@
 package com.alexbzmn;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Arrays;
 import java.util.Scanner;
-import java.util.Set;
 
 /**
  * @author Aleksei Batcman <aleksei.batcman@wirecard.com>
  * @since 18.07.2017
  */
-//For all those who got tc 3,5,7 as WA check for these inputs a) 3 1 3 5 2 7 11 output:16 b)3 8 5 9 10 11 13 output:18
+//For all those who got tc 3,5,7 as WA check for these inputs a) 3 1 3 5 2 7 11 output:16 b)3 8 5 9 10 11 13 output:15
 public class MaxGCDAndSum {
+
     static int maximumGcdAndSum(int[] A, int[] B) {
-        Map<String, Integer> gcdMap = new HashMap<>();
-        Set<Integer> aSet = new HashSet<>();
+        Arrays.sort(A);
+        Arrays.sort(B);
 
-        for (int i = 0; i < A.length; i++) {
-            for (int j = 0; j < B.length; j++) {
-                int first;
-                int second;
-                if (A[i] < B[j]) {
-                    first = A[i];
-                    second = B[j];
-                } else {
-                    first = B[j];
-                    second = A[i];
-                }
 
-                gcdMap.put(first + "," + second, gcd(first, second));
-            }
-        }
-
-        int[] maxPair = new int[3];
-
-        for (Entry<String, Integer> entry : gcdMap.entrySet()) {
-            if (entry.getValue() > maxPair[2]) {
-                String[] key = entry.getKey().split(",");
-                maxPair[0] = Integer.valueOf(key[0]);
-                maxPair[1] = Integer.valueOf(key[1]);
-                maxPair[2] = entry.getValue();
-            }
-        }
-
+        int maxGcd = 0;
         int maxSum = 0;
-        for (Entry<String, Integer> entry : gcdMap.entrySet()) {
-            if (entry.getValue() == maxPair[2]) {
-                String[] key = entry.getKey().split(",");
-                int first = Integer.valueOf(key[0]);
-                int second = Integer.valueOf(key[1]);
-                int sum = first + second;
 
-                if (sum > maxSum) {
-                    maxSum = sum;
+        for (int i = A.length - 1; i >= 0; i--) {
+            int index = Arrays.binarySearch(B, A[i]);
+            if (index >= 0) {
+                maxGcd = A[i];
+                break;
+            }
+        }
+
+        for (int i = A.length - 1; i >= 0; i--) {
+            if (A[i] < maxGcd) {
+                break;
+            }
+
+            for (int j = B.length - 1; j >= 0; j--) {
+
+                if (B[j] < maxGcd) {
+                    break;
                 }
+
+                int gcd = gcd(A[i], B[j], maxGcd);
+                if (gcd >= maxGcd) {
+
+                    int sum = A[i] + B[j];
+                    if (gcd > maxGcd) {
+                        maxSum = sum;
+                    } else if (gcd == maxGcd) {
+                        if (sum > maxSum) {
+                            maxSum = sum;
+                        }
+                    }
+                    maxGcd = gcd;
+                }
+
             }
         }
 
         return maxSum;
     }
 
-    private static int gcd(int x, int y) {
+    private static int gcd(int x, int y, int maxGcd) {
         if (y == 0) {
             return x;
         }
 
-        return gcd(y, x % y);
+        if (y < maxGcd) {
+            return 0;
+        }
+
+        return gcd(y, x % y, maxGcd);
     }
 
     public static void main(String[] args) {
