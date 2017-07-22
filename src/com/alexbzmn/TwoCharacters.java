@@ -1,9 +1,6 @@
 package com.alexbzmn;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by User on 7/11/2017.
@@ -14,44 +11,56 @@ public class TwoCharacters {
         Scanner in = new Scanner(System.in);
         int len = in.nextInt();
         String s = in.next();
+        System.out.println(count(s));
+    }
 
-        String[] a = s.split("");
-        Map<String, Integer> occ = new HashMap<>();
+    private static int count(String s) {
+        Map<String, Integer> maxCombinations = new HashMap<>();
 
-        for (String el : a) {
-            if (!occ.containsKey(el)) {
-                occ.put(el, 1);
-            } else {
-                occ.put(el, occ.get(el) + 1);
-            }
-        }
+        String[] sArr = s.split("");
+        Set<String> letters = new HashSet<>(Arrays.asList(sArr));
 
-        AbstractMap.SimpleEntry<String, Integer> firstEntry = new AbstractMap.SimpleEntry<>("", 0);
-        AbstractMap.SimpleEntry<String, Integer> secondEntry = new AbstractMap.SimpleEntry<>("", 0);
-
-
-        for (Map.Entry<String, Integer> entry : occ.entrySet()) {
-            if (entry.getValue() > firstEntry.getValue()) {
-                secondEntry = firstEntry;
-                firstEntry = new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue());
-            } else if (entry.getValue() > secondEntry.getValue()) {
-                secondEntry = new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue());
-            }
-        }
-
-        if (occ.size() < 2) {
-            System.out.println(0);
-        } else {
-
-            int letterCount = 0;
-            for (String el : a) {
-                if (el.equals(firstEntry.getKey()) || el.equals(secondEntry.getKey())) {
-                    letterCount++;
+        for (String a : letters) {
+            for (String b : letters) {
+                if (b.equals(a)
+                        || maxCombinations.containsKey(b + a)
+                        || maxCombinations.containsKey(a + b)) {
+                    continue;
                 }
+
+                int count = 0;
+                boolean isValid = true;
+
+                String prev = "";
+                for (String l : sArr) {
+                    if (!l.equals(a) && !l.equals(b)) {
+                        continue;
+                    }
+
+                    if (l.equals(prev)) {
+                        isValid = false;
+                        break;
+                    } else {
+                        prev = l;
+                        count++;
+                    }
+                }
+
+                if (isValid) {
+                    maxCombinations.put(a + b, count);
+                }
+
             }
-
-            System.out.println(letterCount);
-
         }
+
+
+        Integer max = 0;
+        for (Integer x : maxCombinations.values()) {
+            if (x > max) {
+                max = x;
+            }
+        }
+
+        return max;
     }
 }
