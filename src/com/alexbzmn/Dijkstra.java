@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
-public class BFS1 {
+public class Dijkstra {
     public static void main(String[] args) {
         bfs();
     }

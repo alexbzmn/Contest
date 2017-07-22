@@ -1,5 +1,7 @@
 package com.alexbzmn;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
@@ -9,8 +11,10 @@ import java.util.AbstractMap.SimpleEntry;
 
 // TODO analyse complexity and optimise
 public class Prim {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws FileNotFoundException {
+        long start = System.currentTimeMillis();
+
+        Scanner sc = new Scanner(new File("files/PRIM05IN"));
 
         int n = sc.nextInt();
         int m = sc.nextInt();
@@ -37,6 +41,8 @@ public class Prim {
             }
         }
 
+        // 3n adding to list and putting to map for all
+
         int startingNode = sc.nextInt();
 
         Map<Integer, Integer> costs = new HashMap<>();
@@ -45,12 +51,20 @@ public class Prim {
             costs.put(key, Integer.MAX_VALUE);
         }
 
+        //n
+
         costs.put(startingNode, 0);
 
         Map<Integer, Integer> costsMst = new HashMap<>();
         costsMst.put(startingNode, 0);
 
         System.out.println(findMSTSum(graph, costs, costsMst));
+
+        long finish = System.currentTimeMillis();
+
+        System.out.println((finish - start) + " ms");
+
+        //O(7n^2)
     }
 
     private static int findMSTSum(Map<Integer, List<SimpleEntry<Integer, Integer>>> graph,
@@ -65,10 +79,14 @@ public class Prim {
             mstSet.add(cheapest.getKey());
             seen.add(cheapest.getKey());
 
+            //n
+
             List<SimpleEntry<Integer, Integer>> neighbours = graph.get(cheapest.getKey());
             for (SimpleEntry<Integer, Integer> adj : neighbours) {
                 updateCost(adj, costs, cheapest.getValue(), costsMst, mstSet);
             }
+
+            //n
 
             for (Map.Entry<Integer, List<SimpleEntry<Integer, Integer>>> childNode : graph.entrySet()) {
                 if (!childNode.getKey().equals(cheapest.getKey())) {
@@ -81,9 +99,13 @@ public class Prim {
                     }
                 }
             }
+
+            //n^2
         }
 
+
         return costsMst.entrySet().stream().map(Map.Entry::getValue).reduce((e1, e2) -> e1 + e2).get();
+        //3n^2
     }
 
     private static void updateCost(SimpleEntry<Integer, Integer> adj, Map<Integer, Integer> costs, Integer parentCost,
