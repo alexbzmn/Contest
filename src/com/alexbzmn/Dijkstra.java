@@ -6,12 +6,6 @@ import java.util.stream.IntStream;
 
 
 public class Dijkstra {
-    class Node extends AbstractMap.SimpleEntry<Integer, Integer> {
-
-        public Node(Integer key, Integer value) {
-            super(key, value);
-        }
-    }
     public static void main(String[] args) {
         bfs();
     }

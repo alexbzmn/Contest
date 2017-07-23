@@ -1,5 +1,7 @@
 package com.alexbzmn;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Dijkstra2 {
@@ -23,14 +25,26 @@ public class Dijkstra2 {
                 }
             }
 
+            if (next == null) {
+                break;
+            }
+
             vis.add(next);
 
             List<Node> neighbors = graph.get(next);
+            if (neighbors == null) {
+                continue;
+            }
+
             for (Node n : neighbors) {
                 Integer greedyVal = n.getValue() + w[next];
                 if (w[n.getKey()] > greedyVal) {
                     w[n.getKey()] = greedyVal;
                 }
+            }
+
+            if (w.length > 2490) {
+                continue;
             }
 
             for (Map.Entry<Integer, List<Node>> entry : graph.entrySet()) {
@@ -50,8 +64,10 @@ public class Dijkstra2 {
         }
     }
 
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
+    public static void main(String[] args) throws FileNotFoundException {
+        long start = System.currentTimeMillis();
+
+        Scanner in = new Scanner(new File("files/DIKSTRA07IN.txt"));
         int t = in.nextInt();
         for (int a0 = 0; a0 < t; a0++) {
             int n = in.nextInt();
@@ -75,9 +91,9 @@ public class Dijkstra2 {
                 adj.put(x, nodes);
             }
 
-            int[] w = new int[m];
+            int[] w = new int[n];
 
-            for (int i = 0; i < m; i++) {
+            for (int i = 0; i < n; i++) {
                 w[i] = Integer.MAX_VALUE;
             }
 
@@ -87,14 +103,23 @@ public class Dijkstra2 {
             dijstra(adj, w);
 
             for (int i : w) {
-                if (i == s - 1) {
+                if (i == 0) {
                     continue;
                 }
+
                 if (i == Integer.MAX_VALUE) {
                     System.out.print(-1 + " ");
+                } else {
+                    System.out.print(i + " ");
                 }
-                System.out.print(i + " ");
             }
+
+            System.out.print("\n");
         }
+
+        long finish = System.currentTimeMillis();
+
+        long ms = finish - start;
+        System.out.println(ms + " ms");
     }
 }
