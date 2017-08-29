@@ -1,39 +1,39 @@
 package com.alexbzmn;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class OneDKnapsack {
     private static int calculateKnapsack(int[] a, int sum) {
-        int[][] ways = new int[a.length + 1][sum];
+        int ways[] = new int[sum + 1];
+        ways[0] = 1;
 
-        for (int i = 0; i <= a.length; i++) {
-
-            for (int j = 0; j < sum; j++) {
-                if (i == 0 || j == 0) {
-                    ways[i][j] = 0;
-                } else if (a[i - 1] <= j) {
-                    int diff = j - a[i - 1];
-                    int underlyingEl = ways[i - 1][diff];
-
-                    int currentEl = a[i - 1] + underlyingEl;
-                    int previous = ways[i - 1][j];
-
-                    int max = currentEl > previous ? currentEl : previous;
-                    ways[i][j] = max;
-
-                } else {
-                    ways[i][j] = ways[i-1][j];
-                }
+        for (int weight : a) {
+            for (int i = weight; i < ways.length; i++) {
+                ways[i] += ways[i - weight];
             }
-
         }
 
+        int max = 0;
 
-        return ways[a.length][sum - 1];
+        for (int i = sum; i >= 0; i--) {
+            int val = ways[i];
+
+            if (val > 0 && i > max) {
+                max = i;
+            }
+
+            if (i < max) {
+                break;
+            }
+        }
+
+        return max;
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws FileNotFoundException {
+        Scanner sc = new Scanner(new File("files/KNAPSACKIN"));
 
         int t = sc.nextInt();
 
