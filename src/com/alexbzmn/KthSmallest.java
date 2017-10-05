@@ -6,22 +6,21 @@ public class KthSmallest {
 
     public static void main(String[] args) {
 
-        int[] arr = new int[]{7, -7, 10, 20, 4, 3, -5, 20, 15, -7};
+//        int[] arr = new int[]{7, -7, 10, 20, 4, 3, -5, 20, 15, -7};
 //        int[] arr = new int[]{7, 10, 4, 3, 20, 15};
+        int[] arr = new int[]{12, 12, 4, 2, -231, 2, -3, 0};
 
-
-        int res = findKthSmallest(3, arr, 0, arr.length - 1);
-        System.out.println(res);
+        findKthSmallest(7, arr, 0, arr.length - 1);
 
         System.out.println(Arrays.toString(arr));
 
 
     }
 
-    private static int findKthSmallest(int k, int[] a, int start, int finish) {
+    private static void findKthSmallest(int k, int[] a, int start, int finish) {
 
         if (start >= finish || a == null) {
-            return -1;
+            return;
         }
 
         int pivot = finish;
@@ -56,22 +55,21 @@ public class KthSmallest {
             a[l] = a[pivot];
             a[pivot] = buf;
 
-            if (l == k) {
-                return a[l];
+            if (l == k - 1) {
+                System.out.println(a[l]);
+                return;
             }
 
+        } else if (l == k - 1) {
+            System.out.println(a[l]);
+            return;
+        } else if (pivot == k - 1) {
+            System.out.println(a[pivot]);
+            return;
         }
 
-        if (pivot == 3) {
-            return a[pivot];
-        }
-
-        if (l > k) {
-            return findKthSmallest(k, a, start, l - 1);
-        } else {
-            return findKthSmallest(k, a, l + 1, finish);
-        }
-
+        findKthSmallest(k, a, start, l - 1);
+        findKthSmallest(k, a, l + 1, finish);
     }
 
 }
