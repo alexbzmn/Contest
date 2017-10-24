@@ -3,7 +3,7 @@ package com.alexbzmn;
 /**
  * Created by User on 7/8/2017.
  */
-public class CycleDetection {
+public class ListCycleDetection {
     class Node {
         int data;
         Node next;
