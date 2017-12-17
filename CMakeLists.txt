@@ -3,5 +3,5 @@ project(Contest)
 
 set(CMAKE_CXX_STANDARD 17)
 
-file(GLOB_RECURSE SRC_FILES src-cp/*.cpp)
-add_executable(src-cp ${SRC_FILES})
+file(GLOB_RECURSE SRC_FILES src-cpp/*.cpp)
+add_executable(src-cpp ${SRC_FILES})
