@@ -11,11 +11,10 @@ object LeftRotation {
         if (i + shift > arr.length - 1) (i + shift) % arr.length
         else i + shift
       })
-    //      .map(i => (i + 4) % arr.length)
-    //      .map(i => arr.length - i)
+      .map(i => (arr.length - 1) - i)
 
     val newArr: Array[Int] = new Array[Int](arr.length)
-    (arr.reverse, indices).zipped.foreach((x, idx) => newArr(idx) = x)
+    (arr, indices).zipped.foreach((x, idx) => newArr(idx) = x)
 
     println(newArr.map(_.toString) reduce ((x, y) => x + " " + y))
   }
