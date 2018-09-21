@@ -1,7 +1,5 @@
 package com.alexbzmn;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +13,9 @@ public class Palindrome {
         System.out.println(getLongestPalindromeFromString(null));
         System.out.println(getLongestPalindromeFromString("erererererererererere"));
         System.out.println(getLongestPalindromeFromString("Rdeder"));
-
+        System.out.println(getLongestPalindromeFromString("aaa"));
+        System.out.println(getLongestPalindromeFromString("aaabbb"));
+        System.out.println(getLongestPalindromeFromString("aaaabbbb"));
     }
 
     private static String getLongestPalindromeFromString(String value) {
@@ -27,30 +27,47 @@ public class Palindrome {
 
         Map<String, Integer> counts = new HashMap<>();
 
-        Arrays.stream(strings).forEach(x -> {
-            if (counts.containsKey(x)) {
-                counts.put(x, counts.get(x) + 1);
+        for (String letter : strings) {
+            if (counts.containsKey(letter)) {
+                counts.put(letter, counts.get(letter) + 1);
             } else {
-                counts.put(x, 1);
+                counts.put(letter, 1);
             }
-        });
+        }
+
+        if (counts.size() == 1) {
+            return value;
+        }
 
         StringBuilder builder = new StringBuilder();
-        counts.entrySet().stream().filter(stringIntegerEntry -> stringIntegerEntry.getValue() > 1)
-                .sorted(Map.Entry.comparingByValue(Collections.reverseOrder())).forEach(entry -> {
-            String letter = entry.getKey();
-            Integer occurrenceCount = entry.getValue();
+        for (Map.Entry<String, Integer> stringIntegerEntry : counts.entrySet()) {
+            if (stringIntegerEntry.getValue() > 1) {
+                String letter = stringIntegerEntry.getKey();
+                Integer occurrenceCount = stringIntegerEntry.getValue();
 
-            if (occurrenceCount % 2 == 0) {
-                appendNElements(builder, letter, occurrenceCount / 2);
-            } else {
-                appendNElements(builder, letter, (occurrenceCount - 1) / 2);
+                if (occurrenceCount % 2 == 0) {
+                    appendNElements(builder, letter, occurrenceCount / 2);
+                } else {
+                    appendNElements(builder, letter, (occurrenceCount - 1) / 2);
+                }
             }
-        });
+        }
 
-        counts.entrySet().stream().filter(entry -> entry.getValue() == 1).findAny().ifPresent(x -> builder.append(x.getKey()));
-        return builder.substring(0, builder.length() - 1) + builder.reverse().
-                toString();
+        boolean singleAppended = false;
+        for (Map.Entry<String, Integer> entry : counts.entrySet()) {
+            if (entry.getValue() == 1) {
+                builder.append(entry.getKey());
+                singleAppended = true;
+                break;
+            }
+        }
+        if (!singleAppended) {
+            return builder.toString() + builder.reverse().toString();
+        } else {
+            return builder.substring(0, builder.length() - 1) + builder.reverse().
+                    toString();
+        }
+
     }
 
     private static void appendNElements(StringBuilder stringBuilder, String value, Integer n) {
