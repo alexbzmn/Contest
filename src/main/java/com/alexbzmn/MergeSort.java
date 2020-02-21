@@ -10,28 +10,9 @@ public class MergeSort {
 
     public static void main(String[] args) {
         int[] a = {6, 4, 2, 7, 3, -1, 0, 2}; //-1 0 2 2 3 4 6 7
-        long s = System.currentTimeMillis();
 
-//        int[] a = new Random().ints(1000000, -1000, 1000).toArray();
-//        System.out.println(Arrays.toString(a));
-
-//        sort(a);
-        insertionSort(a);
-
-//        Arrays.sort(a);
-
-        for (int i = 1; i < a.length; i++) {
-
-            if (a[i] < a[i - 1]) {
-                System.out.println("Assertion failed");
-            }
-        }
-
+        sortTwo(a, 0, a.length - 1);
         System.out.println(Arrays.toString(a));
-
-        long f = System.currentTimeMillis();
-
-        System.out.println("TIME: " + (f - s));
     }
 
 
@@ -75,6 +56,40 @@ public class MergeSort {
         inversionCount = 0;
         sort(0, arr.length - 1, arr);
         return inversionCount;
+    }
+
+    private static void sortTwo(int[] a, int l, int r) {
+        if (l == r) {
+            return;
+        }
+
+        int m = (l + r) / 2;
+        sortTwo(a, l, m);
+        sortTwo(a, m + 1, r);
+
+        int[] copy = new int[r - l + 1];
+        System.arraycopy(a, l, copy, 0, r - l + 1);
+
+        int j = l;
+        int k = m + 1;
+
+        int i = l;
+
+        while (j <= m || k <= r) {
+            if (k <= r - l && copy[j - l] <= copy[k - l]) {
+                a[i] = copy[j - l];
+                j++;
+                i++;
+            } else if (k <= r - l && copy[j - l] > copy[k - l]) {
+                a[i] = copy[k - l];
+                k++;
+                i++;
+            } else {
+                a[i] = copy[j - l];
+                j++;
+                i++;
+            }
+        }
     }
 
     private static void sort(int[] arr) {
