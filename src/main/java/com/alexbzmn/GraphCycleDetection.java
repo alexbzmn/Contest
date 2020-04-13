@@ -3,8 +3,6 @@ package com.alexbzmn;
 import com.alexbzmn.util.GraphBuilder;
 import com.alexbzmn.util.Node;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Stack;
 
 public class GraphCycleDetection {
@@ -16,10 +14,10 @@ public class GraphCycleDetection {
     }
 
     private static boolean hasCycle(Node root, Stack<Integer> stack) {
-        if (stack.contains(root.key)) {
+        if (stack.contains(root.val)) {
             return true;
         } else {
-            stack.add(root.key);
+            stack.add(root.val);
             for (Node child : root.edges) {
                 boolean childHasCycle = hasCycle(child, stack);
                 if (childHasCycle) {

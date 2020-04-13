@@ -16,16 +16,16 @@ public class MaxPathSum {
         graphBuilder.addEdge(-25, 4);
 
         Node node = new Node();
-        node.key = Integer.MIN_VALUE;
+        node.val = Integer.MIN_VALUE;
         findMaxPathSum(graphBuilder.getNode(10), node);
 
-        System.out.println(node.key);
+        System.out.println(node.val);
 
     }
 
     private static int findMaxPathSum(Node node, Node globalMax) {
 
-        int sumItself = node.key;
+        int sumItself = node.val;
         int sumLeft = 0;
         int sumRight = 0;
 
@@ -40,7 +40,7 @@ public class MaxPathSum {
         int localMax = Math.max(Math.max(sumLeft, sumRight) + sumItself, sumItself);
 
 
-        globalMax.key = Math.max(localMax, sumItself + sumLeft + sumRight);
+        globalMax.val = Math.max(localMax, sumItself + sumLeft + sumRight);
         return localMax;
     }
 }

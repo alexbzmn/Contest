@@ -46,7 +46,7 @@ public class EvenTree {
             chCount += countChildren(child);
         }
 
-        if (chCount % 2 == 0 && parent.key != 1) {
+        if (chCount % 2 == 0 && parent.val != 1) {
             cutCount++;
             return 0;
         }

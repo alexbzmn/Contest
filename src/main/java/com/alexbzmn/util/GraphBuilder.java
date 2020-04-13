@@ -11,23 +11,23 @@ public class GraphBuilder {
         Node finishNode = null;
 
         for (Node v : graph) {
-            if (v.key.equals(start)) {
+            if (v.val.equals(start)) {
                 startNode = v;
             }
-            if (v.key.equals(finish)) {
+            if (v.val.equals(finish)) {
                 finishNode = v;
             }
         }
 
         if (startNode == null) {
             startNode = new Node();
-            startNode.key = start;
+            startNode.val = start;
             graph.add(startNode);
         }
 
         if (finishNode == null) {
             finishNode = new Node();
-            finishNode.key = finish;
+            finishNode.val = finish;
             graph.add(finishNode);
         }
 
@@ -36,7 +36,7 @@ public class GraphBuilder {
 
     public Node getNode(Integer key) {
         for (Node v : graph) {
-            if (v.key.equals(key)) {
+            if (v.val.equals(key)) {
                 return v;
             }
         }

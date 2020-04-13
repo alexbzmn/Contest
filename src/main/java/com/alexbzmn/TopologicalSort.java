@@ -15,7 +15,7 @@ public class TopologicalSort {
         Set<Integer> visited = new HashSet<>();
 
         for (Node node : graph) {
-            if (!visited.contains(node.key)) {
+            if (!visited.contains(node.val)) {
                 topSort(node, stack, visited);
             }
         }
@@ -26,15 +26,15 @@ public class TopologicalSort {
     }
 
     private static void topSort(Node root, Stack<Integer> stack, Set<Integer> visited) {
-        visited.add(root.key);
+        visited.add(root.val);
 
         for (Node child : root.edges) {
-            if (!visited.contains(child.key)) {
+            if (!visited.contains(child.val)) {
                 topSort(child, stack, visited);
             }
         }
 
-        stack.push(root.key);
+        stack.push(root.val);
     }
 
     public static void main(String[] args) {
