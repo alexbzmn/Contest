@@ -15,7 +15,7 @@ public class Trie {
 		//		trie.insert("app");
 		//		System.out.println(trie.search("app"));
 
-		add(trie, Arrays.asList("apple", "applet", "ap", "appstore", "aston", "bpple"));
+		add(trie, Arrays.asList("apple", "applet", "ap", "appstore", "appstoret", "appstoree", "aston", "bpple"));
 
 		System.out.println();
 	}
@@ -27,134 +27,80 @@ public class Trie {
 	}
 	//apple, applet, ap, appstore, aston, bpple
 
-	// new leaf is inserted after the existing key parent
-	// new is equal to the parent
-	// new leaf is inserted as split of an existing entry
-
-	//
-	//["Trie","insert","search","search","startsWith","insert","search"]
-	//[[],["apple"],["apple"],["app"],["app"],["app"],["app"]]
 	private Node root;
 
-	/**
-	 * Initialize your data structure here.
-	 */
 	public Trie() {
-		this.root = new Node("", false);
+		this.root = new Node();
 	}
 
 	private static class Node {
 
-		private String val;
+		private static final int R = 26;
 
-		private boolean isKey;
+		private boolean isEnd;
 
-		private List<Node> nodes = new ArrayList<>();
+		private Node[] nodes = new Node[R];
 
-		private Node(String val, boolean isKey) {
-			this.val = val;
-			this.isKey = isKey;
+		private boolean containsKey(char c) {
+			return nodes[c - 'a'] != null;
 		}
 
-		private void insert(String v) {
-			if (v.equals(this.val)) {
-				return;
-			} else if (this.val.startsWith(v)) {
-				Node newRoot = new Node(this.val, true);
-				newRoot.nodes = this.nodes;
-
-				this.nodes = new ArrayList<>();
-				this.nodes.add(newRoot);
-				this.val = v;
-				return;
-			}
-
-			for (Node c : nodes) {
-				if (v.startsWith(c.val) || c.val.startsWith(v)) {
-					c.insert(v);
-					return;
-				} else {
-					int i = 0;
-					while (i < v.length() - 1) {
-						if (v.charAt(i) == c.val.charAt(i)) {
-							i++;
-						} else {
-							break;
-						}
-					}
-
-					if (i > 0) {
-						Node r = new Node(c.val, true);
-						r.nodes = c.nodes;
-
-						c.val = c.val.substring(0, i);
-						c.nodes = new ArrayList<>();
-						c.nodes.add(r);
-						c.nodes.add(new Node(v, true));
-						c.isKey = false;
-
-						return;
-					}
-				}
-			}
-
-			if (v.startsWith(this.val)) {
-				this.nodes.add(new Node(v, true));
-			}
+		private void addKey(char c) {
+			this.nodes[c - 'a'] = new Node();
 		}
 
-		private boolean search(String word) {
-			if (this.val.equals(word) && this.isKey) {
-				return true;
-			}
-
-			for (Node n : this.nodes) {
-				if (word.startsWith(n.val)) {
-					return n.search(word);
-				}
-			}
-
-			return false;
+		private Node getKey(char c) {
+			return this.nodes[c - 'a'];
 		}
 
-		private boolean startsWith(String word) {
-			if (this.val.startsWith(word)) {
-				return true;
-			}
-
-			for (Node n : this.nodes) {
-				if (n.val.startsWith(word)) {
-					return true;
-				}
-
-				if (word.startsWith(n.val)) {
-					return n.startsWith(word);
-				}
-			}
-
-			return false;
-		}
 	}
 
 	/**
 	 * Inserts a word into the trie.
 	 */
 	public void insert(String word) {
-		this.root.insert(word);
+		Node n = this.root;
+
+		for (int i = 0; i < word.length(); i++) {
+			char c = word.charAt(i);
+
+			if (!n.containsKey(c)) {
+				n.addKey(c);
+			}
+
+			n = n.getKey(c);
+		}
+
+		n.isEnd = true;
+	}
+
+	private Node getPrefix(String word) {
+		Node n = this.root;
+		for (int i = 0; i < word.length(); i++) {
+			char c = word.charAt(i);
+			if (!n.containsKey(c)) {
+				return null;
+			} else {
+				n = n.getKey(c);
+			}
+		}
+
+		return n;
 	}
 
 	/**
 	 * Returns if the word is in the trie.
 	 */
 	public boolean search(String word) {
-		return this.root.search(word);
+		Node n = getPrefix(word);
+		return n != null && n.isEnd;
 	}
 
 	/**
 	 * Returns if there is any word in the trie that starts with the given prefix.
 	 */
 	public boolean startsWith(String prefix) {
-		return this.root.startsWith(prefix);
+		return getPrefix(prefix) != null;
 	}
 
 }
