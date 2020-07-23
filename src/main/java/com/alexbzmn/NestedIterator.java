@@ -37,32 +37,32 @@ public class NestedIterator implements Iterator<Integer> {
 	public static void main(String[] args) {
 		Map<Integer, Integer> count = new HashMap<>();
 
-		List<NestedInteger> list = List.of(
-			new NestedInteger(List.of(new NestedInteger(1), new NestedInteger(1))),
-			new NestedInteger(2),
-			new NestedInteger(List.of(new NestedInteger(1), new NestedInteger(1)))
-		);
-
-		List<NestedInteger> list1 = List.of(
-			new NestedInteger(List.of(new NestedInteger(List.of(new NestedInteger(List.of(new NestedInteger(List.of(new NestedInteger(1))))))))),
-			new NestedInteger(2)
-		);
-
-		List<NestedInteger> list2 = List.of(new NestedInteger(List.of(
-			new NestedInteger(List.of(new NestedInteger(1), new NestedInteger(2))),
-			new NestedInteger(3))), new NestedInteger(4));
-
-		//		List<NestedInteger> list3 = List.of(new NestedInteger(2));
-		List<NestedInteger> list4 = List.of(new NestedInteger(2));
-
-		//		NestedIterator iterator = new NestedIterator(list);
-		//		NestedIterator iterator = new NestedIterator(list1);
-		//		NestedIterator iterator = new NestedIterator(List.of(new NestedInteger(List.of()), new NestedInteger(1)));
-		NestedIterator iterator = new NestedIterator(List.of(new NestedInteger(List.of())));
-		//		NestedIterator iterator = new NestedIterator(list2);
-		while (iterator.hasNext()) {
-			System.out.println(iterator.next());
-		}
+//		List<NestedInteger> list = List.of(
+//			new NestedInteger(List.of(new NestedInteger(1), new NestedInteger(1))),
+//			new NestedInteger(2),
+//			new NestedInteger(List.of(new NestedInteger(1), new NestedInteger(1)))
+//		);
+//
+//		List<NestedInteger> list1 = List.of(
+//			new NestedInteger(List.of(new NestedInteger(List.of(new NestedInteger(List.of(new NestedInteger(List.of(new NestedInteger(1))))))))),
+//			new NestedInteger(2)
+//		);
+//
+//		List<NestedInteger> list2 = List.of(new NestedInteger(List.of(
+//			new NestedInteger(List.of(new NestedInteger(1), new NestedInteger(2))),
+//			new NestedInteger(3))), new NestedInteger(4));
+//
+//		//		List<NestedInteger> list3 = List.of(new NestedInteger(2));
+//		List<NestedInteger> list4 = List.of(new NestedInteger(2));
+//
+//		//		NestedIterator iterator = new NestedIterator(list);
+//		//		NestedIterator iterator = new NestedIterator(list1);
+//		//		NestedIterator iterator = new NestedIterator(List.of(new NestedInteger(List.of()), new NestedInteger(1)));
+//		NestedIterator iterator = new NestedIterator(List.of(new NestedInteger(List.of())));
+//		//		NestedIterator iterator = new NestedIterator(list2);
+//		while (iterator.hasNext()) {
+//			System.out.println(iterator.next());
+//		}
 	}
 
 	private Integer next;
