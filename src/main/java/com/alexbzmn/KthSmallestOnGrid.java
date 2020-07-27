@@ -1,7 +1,5 @@
 package com.alexbzmn;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -10,12 +8,9 @@ public class KthSmallestOnGrid {
 	public static void main(String[] args) {
 
 		//		System.out.println(new KthSmallestOnGrid().kthSmallest(new int[][] { new int[] { 1, 5, 9 }, new int[] { 10, 11, 13 }, new int[] { 12, 13, 15 } }, 8));
-//		System.out.println(new KthSmallestOnGrid().kthSmallest(new int[][] { new int[] { 1, 5, 9 }, new int[] { 10, 11, 13 }, new int[] { 12, 13, 15 } }, 5));
+		System.out.println(new KthSmallestOnGrid().kthSmallest(new int[][] { new int[] { 1, 5, 9 }, new int[] { 10, 11, 13 }, new int[] { 12, 13, 15 } }, 5));
 
-		System.out.println('z' - 'a');
 	}
-
-
 
 	public int kthSmallest(int[][] matrix, int k) {
 		Queue<Tuple> q = new PriorityQueue<>((a, b) -> a.val - b.val);
