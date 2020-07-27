@@ -7,43 +7,68 @@ public class LongestSubstringWithCountMoreThanK {
 
 	public static void main(String[] args) {
 
+		System.out.println(new LongestSubstringWithCountMoreThanK().longestSubstring("ababbbcx", 3));
+		System.out.println(new LongestSubstringWithCountMoreThanK().longestSubstring("ababbc", 2));
+		System.out.println(new LongestSubstringWithCountMoreThanK().longestSubstring("aaab", 3));
+		System.out.println(new LongestSubstringWithCountMoreThanK().longestSubstring("abb", 3));
+		System.out.println(new LongestSubstringWithCountMoreThanK().longestSubstring("abb", 2));
+		System.out.println(new LongestSubstringWithCountMoreThanK().longestSubstring("a", 2));
+		System.out.println(new LongestSubstringWithCountMoreThanK().longestSubstring("", 2));
+		System.out.println(new LongestSubstringWithCountMoreThanK().longestSubstring("aaaaaaaaaaaaaabbbbbbbbbbbbbbbbbccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 5));
 	}
 
 	public int longestSubstring(String s, int k) {
-		// what if the invariant holds only without previous symbols: a,b,b; b,a,b
 
-		int maxC = 0;
-		for (int i = 0; i < s.length(); i++) {
-			Map<Character, Integer> m = new HashMap<>();
+		//for h unique chars that are repeating no less than k, calculate width of the window
 
-			if (s.length() - i <= maxC) {
-				break;
-			}
+		int maxLen = 0;
+		char[] chars = s.toCharArray();
 
-			for (int j = i; j < s.length(); j++) {
-				Character ch = s.charAt(j);
-				if (!m.containsKey(ch)) {
-					m.put(ch, 1);
+		for (int h = 1; h <= 26; h++) {
+			int i = 0;
+			int j = 0;
+			int mk = 0;
+			int[] c = new int[26];
+			int unique = 0;
+
+			while (i < chars.length) {
+
+				if (unique <= h) {
+					int idx = chars[i] - 'a';
+
+					if (c[idx] == 0) {
+						unique++;
+					}
+
+					c[idx]++;
+					i++;
+
+					if (c[idx] == k) {
+						mk++;
+					}
+
 				} else {
-					m.put(ch, m.get(ch) + 1);
+					int idx = chars[j] - 'a';
+
+					if (c[idx] == k) {
+						mk--;
+					}
+
+					c[idx]--;
+					j++;
+
+					if (c[idx] == 0) {
+						unique--;
+					}
 				}
 
-				if (checkValid(m, k)) {
-					maxC = Math.max(maxC, j - i + 1);
+				if (h == unique && mk == h) {
+					maxLen = Math.max(maxLen, i - j);
 				}
 			}
 		}
 
-		return maxC;
-	}
-
-	private boolean checkValid(Map<Character, Integer> m, int k) {
-		boolean res = true;
-		for (Character c : m.keySet()) {
-			res = res & (m.get(c) >= k);
-		}
-
-		return res;
+		return maxLen;
 	}
 
 }
