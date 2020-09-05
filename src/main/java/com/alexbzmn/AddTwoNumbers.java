@@ -2,7 +2,7 @@ package com.alexbzmn;
 
 public class AddTwoNumbers {
 
-    public class ListNode {
+    public static class ListNode {
         int val;
         ListNode next;
 
@@ -10,6 +10,10 @@ public class AddTwoNumbers {
             val = x;
         }
 
+        public ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
     }
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
