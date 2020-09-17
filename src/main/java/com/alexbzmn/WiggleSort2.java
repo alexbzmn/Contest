@@ -1,6 +1,8 @@
 package com.alexbzmn;
 
 import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class WiggleSort2 {
 
@@ -75,7 +77,7 @@ public class WiggleSort2 {
 			return low;
 		}
 
-		int pivot = (low + high) / 2;
+		int pivot = ThreadLocalRandom.current().nextInt(low, high + 1);
 		int pivotVal = nums[pivot];
 
 		swap(pivot, high, nums);
